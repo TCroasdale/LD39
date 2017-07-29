@@ -71,7 +71,20 @@ namespace LD39
                             case "Battery":
                                 xPos = int.Parse(reader.GetAttribute("x"));
                                 yPos = int.Parse(reader.GetAttribute("y"));
-                                ActorManager.Instance.createActor<PowerPlusActor>("Player", new Vector2(xPos, yPos));
+                                ActorManager.Instance.createActor<PowerPlusActor>("Battery", new Vector2(xPos, yPos));
+                                break;
+                            case "Coin_gold":
+                                xPos = int.Parse(reader.GetAttribute("x"));
+                                yPos = int.Parse(reader.GetAttribute("y"));
+                                CoinActor actor = ActorManager.Instance.createActor<CoinActor>("GoldCoin", new Vector2(xPos, yPos)) as CoinActor;
+                                actor.amount = 250;
+                                actor.setSprite(ArtManager.Instance.getTexture("GoldCoin"));
+                                break;
+                            case "Coin_Silver":
+                                xPos = int.Parse(reader.GetAttribute("x"));
+                                yPos = int.Parse(reader.GetAttribute("y"));
+                                actor = ActorManager.Instance.createActor<CoinActor>("SilvCoin", new Vector2(xPos, yPos)) as CoinActor;
+                                actor.amount = 100;
                                 break;
                             case "tile":
                                 Console.WriteLine("Found Tile");

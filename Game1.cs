@@ -62,6 +62,8 @@ namespace LD39
             ArtManager.Instance.addTexture("Player_left", Content.Load<Texture2D>("Robo_left"));
             ArtManager.Instance.addTexture("Tiles", Content.Load<Texture2D>("Tiles"));
             ArtManager.Instance.addTexture("Battery", Content.Load<Texture2D>("Battery"));
+            ArtManager.Instance.addTexture("SilverCoin", Content.Load<Texture2D>("SilverCoin"));
+            ArtManager.Instance.addTexture("GoldCoin", Content.Load<Texture2D>("GoldCoin"));
 
         }
 

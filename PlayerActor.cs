@@ -93,9 +93,14 @@ namespace LD39
             }
             else
             {
-                if(info.other.tag == "Battery")
+                if (info.other.tag == "Battery")
                 {
                     currPower = maxPower;
+                    ActorManager.Instance.deleteActor(info.other);
+                }
+                else if (info.other.tag == "Coin")
+                {
+                    score += ((CoinActor)info.other).amount;
                     ActorManager.Instance.deleteActor(info.other);
                 }
                 return false;
@@ -131,5 +136,7 @@ namespace LD39
         float currPower = 100.0f;
         float walkPowerDecrease = 0.25f;
         float jumpPowerDecrease = 1f;
+
+        int score = 0;
     }
 }
