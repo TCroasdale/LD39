@@ -23,6 +23,7 @@ namespace LD39
             graphics = new GraphicsDeviceManager(this);
             graphics.PreferredBackBufferHeight = 600;
             graphics.PreferredBackBufferWidth = 800;
+            graphics.SynchronizeWithVerticalRetrace = true;
             graphics.ApplyChanges();
             this.Window.Title = "Robo Climb?";
             Content.RootDirectory = "Content";
@@ -60,6 +61,8 @@ namespace LD39
 
             // TODO: use this.Content to load your game content here
             ArtManager.Instance.addTexture("Player", Content.Load<Texture2D>("Robo"));
+            ArtManager.Instance.addTexture("Player_right", Content.Load<Texture2D>("Robo_right"));
+            ArtManager.Instance.addTexture("Player_left", Content.Load<Texture2D>("Robo_left"));
             ArtManager.Instance.addTexture("Tiles", Content.Load<Texture2D>("Tiles"));
 
         }

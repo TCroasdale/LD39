@@ -49,6 +49,6 @@ namespace LD39
         }
 
         //TODO:
-        //update, draw, deletion and creation
+        //deletion
     }
 }

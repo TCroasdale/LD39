@@ -80,7 +80,7 @@ namespace LD39
                             case "detailTiles":
                                 break;
                             default:
-                                Console.WriteLine("Fucked up with: " + reader.Name);
+                                //Console.WriteLine("Fucked up with: " + reader.Name);
                                 break;
 
                         }

@@ -9,7 +9,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
 namespace LD39{
-    abstract class Actor{
+    public abstract class Actor{
 
 
         /// <summary>
@@ -22,6 +22,9 @@ namespace LD39{
         /// </summary>
         /// <returns>if a non zero value is return the entity is deleted asap</returns>
         abstract public int Update(float deltaTime);
+
+        abstract public bool OnCollision(collision info);
+        abstract public void OnSeparation(collision info);
 
         /// <summary>
         /// Called once per frame on every actor can be used to draw extra things on the screen
