@@ -32,15 +32,19 @@ namespace LD39
             PhysicsManager.Instance.registerFixture(fixture, this);
 
             jumpForce = -55000.0f;// calculateJumpForce();
+            tag = "Player";
         }
 
         public override int Update(float deltaTime)
         {
             float moveHor = 0f;
-            if (Keyboard.GetState().IsKeyDown(Keys.Left)){
+            bool keyLeft = Keyboard.GetState().IsKeyDown(Keys.Left);
+            bool keyRight = Keyboard.GetState().IsKeyDown(Keys.Right);
+
+            if (keyLeft && !keyRight){
                 moveHor = -1.0f;
                 setSprite(ArtManager.Instance.getTexture("Player_left"));
-            }else if (Keyboard.GetState().IsKeyDown(Keys.Right)) {
+            }else if (keyRight && !keyLeft) {
                 moveHor = 1.0f;
                 setSprite(ArtManager.Instance.getTexture("Player_right"));
             }
@@ -52,9 +56,18 @@ namespace LD39
             if (Keyboard.GetState().IsKeyDown(Keys.Space) && isGrounded)
             {
                 playerBody.ApplyForce(new Vector2(0, jumpForce));
+                currPower -= jumpPowerDecrease;
             }
 
+            if (!isGrounded)
+            {
+                moveHor *= inAirMoveSpeedModifier;
+            }
+
+
+            currPower -= Math.Abs(moveHor) * walkPowerDecrease;
             playerBody.LinearVelocity = new Vector2(moveHor * moveSpeed, playerBody.LinearVelocity.Y);
+            Console.WriteLine("CurrentPower: {0}", currPower);
             return 0;
         }
 
@@ -71,11 +84,20 @@ namespace LD39
         {
             if (info.other == null)
             {
-                isGrounded = true;
-                return true;
+                if (playerBody.LinearVelocity.Y > 0 || (playerBody.LinearVelocity.X > -0.1 && playerBody.LinearVelocity.X < 0.1))
+                {
+                    isGrounded = true;
+                    return true;
+                }
+                return false;
             }
             else
             {
+                if(info.other.tag == "Battery")
+                {
+                    currPower = maxPower;
+                    ActorManager.Instance.deleteActor(info.other);
+                }
                 return false;
             }
         }
@@ -98,9 +120,16 @@ namespace LD39
         Fixture fixture;
 
         float moveSpeed = 64.0f;
+        float inAirMoveSpeedModifier = 0.75f;
         float jumpForce;
         float mass = 5.0f;
 
         bool isGrounded;
+
+
+        float maxPower = 100.0f;
+        float currPower = 100.0f;
+        float walkPowerDecrease = 0.25f;
+        float jumpPowerDecrease = 1f;
     }
 }

@@ -103,16 +103,28 @@ namespace LD39
             if (fixtureActorMapping.ContainsKey(f1))
             {
                 Actor other = null;
-                if (fixtureActorMapping.ContainsKey(f2))
+                Vector2 pos = Vector2.Zero;
+                if (fixtureActorMapping.ContainsKey(f2)){
                     other = fixtureActorMapping[f2];
+                }
+                else
+                {
+                    ret2 = false;
+                }
 
-                ret1 = fixtureActorMapping[f1].OnCollision(new collision(other, Vector2.Zero));
+                ret1 = fixtureActorMapping[f1].OnCollision(new collision(other, pos));
             }
             if (fixtureActorMapping.ContainsKey(f2))
             {
                 Actor other = null;
                 if (fixtureActorMapping.ContainsKey(f1))
+                {
                     other = fixtureActorMapping[f1];
+                }
+                else
+                {
+                    ret1 = false;
+                }
                 ret2 = fixtureActorMapping[f2].OnCollision(new collision(other, Vector2.Zero));
             }
 

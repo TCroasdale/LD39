@@ -40,14 +40,18 @@ namespace LD39{
         public void setPosition(Vector2 pos){
             position = pos;
         }
-        public virtual Vector2 getPosition() { return position; }
+        public virtual Vector2 getPosition() {
+            return position - size / 2;
+        }
 
         public void setSize(Vector2 s) {
             size = s;
         }
 
+        public string tag = "Actor";
+
         private Texture2D sprite;
         private Vector2 position;
-        private Vector2 size;
+        private Vector2 size = Vector2.Zero;
     }
 }

@@ -13,11 +13,27 @@ namespace LD39
     class ActorManager
     {
 
-        public ActorManager(){
+        #region SINGLETON IMPL
+        private static ActorManager instance;
+
+        private ActorManager() {
             actors = new Dictionary<string, Actor>();
+            actorsToAdd = new Dictionary<string, Actor>();
+            actorsToDelete = new List<string>();
         }
 
-        public Dictionary<string, Actor> actors;
+        public static ActorManager Instance
+        {
+            get
+            {
+                if (instance == null)
+                {
+                    instance = new ActorManager();
+                }
+                return instance;
+            }
+        }
+        #endregion
 
         public Actor createActor<T>(string name, Vector2 position) where T : Actor{
             Actor newActor = (T)Activator.CreateInstance(typeof(T));
@@ -34,9 +50,24 @@ namespace LD39
 
         public void Update(float deltaTime){
             foreach (KeyValuePair<string, Actor> actor in actors){
-                actor.Value.Update(deltaTime);
+                int status = actor.Value.Update(deltaTime);
                 //If the actor update returns non zero, delete it.
+                if(status != 0){
+                    actorsToDelete.Add(actor.Key);
+                }
             }
+
+            foreach (string actor in actorsToDelete)
+            {
+                actors.Remove(actor);
+            }
+            actorsToDelete.Clear();
+
+            foreach (KeyValuePair<string, Actor> actor in actorsToAdd)
+            {
+                actors.Add(actor.Key, actor.Value);
+            }
+            actorsToAdd.Clear();
         }
 
         public void Draw(SpriteBatch sb)
@@ -48,7 +79,27 @@ namespace LD39
             }
         }
 
-        //TODO:
-        //deletion
+        public void deleteActor(Actor actor){
+            if (actors.ContainsValue(actor))
+            {
+                actorsToDelete.Add(getKeyForActor(actor));
+            }
+        }
+
+        public string getKeyForActor(Actor actor)
+        {
+            foreach(KeyValuePair<string, Actor> actor2 in actors)
+            {
+                if(actor == actor2.Value)
+                {
+                    return actor2.Key;
+                }
+            }
+            return "NONE";
+        }
+
+        private Dictionary<string, Actor> actors;
+        private Dictionary<string, Actor> actorsToAdd;
+        private List<string> actorsToDelete;
     }
 }

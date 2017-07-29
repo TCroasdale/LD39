@@ -63,7 +63,15 @@ namespace LD39
                                     reader.Read();
                                 } while (reader.Name == "rect");
                                 break;
-                            case "actors":
+                            case "PlayerStart":
+                                int xPos = int.Parse(reader.GetAttribute("x"));
+                                int yPos = int.Parse(reader.GetAttribute("y"));
+                                ActorManager.Instance.createActor<PlayerActor>("Player", new Vector2(xPos, yPos));
+                                break;
+                            case "Battery":
+                                xPos = int.Parse(reader.GetAttribute("x"));
+                                yPos = int.Parse(reader.GetAttribute("y"));
+                                ActorManager.Instance.createActor<PowerPlusActor>("Player", new Vector2(xPos, yPos));
                                 break;
                             case "tile":
                                 Console.WriteLine("Found Tile");

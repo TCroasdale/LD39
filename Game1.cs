@@ -15,8 +15,6 @@ namespace LD39
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
-        ActorManager actorManager;
-
         
         public Game1()
         {
@@ -44,7 +42,6 @@ namespace LD39
             PhysicsManager.Instance.initialise();
             LevelManager.Instance.initialise();
             LevelManager.Instance.setTileset("Tiles");
-            actorManager = new ActorManager();
 
             //Starting the game.
             StartGame();
@@ -64,6 +61,7 @@ namespace LD39
             ArtManager.Instance.addTexture("Player_right", Content.Load<Texture2D>("Robo_right"));
             ArtManager.Instance.addTexture("Player_left", Content.Load<Texture2D>("Robo_left"));
             ArtManager.Instance.addTexture("Tiles", Content.Load<Texture2D>("Tiles"));
+            ArtManager.Instance.addTexture("Battery", Content.Load<Texture2D>("Battery"));
 
         }
 
@@ -89,7 +87,7 @@ namespace LD39
 
             // TODO: Add your update logic here
             PhysicsManager.Instance.update((float)gameTime.ElapsedGameTime.TotalSeconds);
-            actorManager.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
+            ActorManager.Instance.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
 
             base.Update(gameTime);
         }
@@ -104,8 +102,9 @@ namespace LD39
 
             // TODO: Add your drawing code here
             spriteBatch.Begin();
+
+            ActorManager.Instance.Draw(spriteBatch);
             LevelManager.Instance.drawLevel(spriteBatch);
-            actorManager.Draw(spriteBatch);
             //PhysicsManager.Instance.debugDraw(spriteBatch);
             spriteBatch.End();
 
@@ -115,7 +114,6 @@ namespace LD39
 
         void StartGame(){
             LevelManager.Instance.loadFile("BaseLevel.oel");
-            actorManager.createActor<PlayerActor>("Robot", new Vector2(400, 0));
         }
     }
 }
