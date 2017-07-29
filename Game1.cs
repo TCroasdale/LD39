@@ -11,10 +11,18 @@ namespace LD39
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+
+        Texture2D playerSprite;
+        Texture2D groundSprite;
+        Texture2D batterySprite;
         
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
+            graphics.PreferredBackBufferHeight = 600;
+            graphics.PreferredBackBufferWidth = 800;
+            graphics.ApplyChanges();
+            this.Window.Title = "Robo Climb?";
             Content.RootDirectory = "Content";
         }
 
@@ -41,6 +49,7 @@ namespace LD39
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
+           playerSprite = Content.Load<Texture2D>("Robo");
         }
 
         /// <summary>
@@ -50,6 +59,7 @@ namespace LD39
         protected override void UnloadContent()
         {
             // TODO: Unload any non ContentManager content here
+            Content.Unload();
         }
 
         /// <summary>
