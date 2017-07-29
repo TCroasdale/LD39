@@ -2,8 +2,11 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
+
 namespace LD39
 {
+
+
     /// <summary>
     /// This is the main type for your game.
     /// </summary>
@@ -12,11 +15,8 @@ namespace LD39
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
-        Texture2D playerSprite;
-        Texture2D groundSprite;
-        Texture2D batterySprite;
-
         ActorManager actorManager;
+
         
         public Game1()
         {
@@ -40,6 +40,7 @@ namespace LD39
 
             base.Initialize();
 
+            PhysicsManager.Instance.initialise();
             actorManager = new ActorManager();
 
             //Starting the game.
@@ -81,6 +82,7 @@ namespace LD39
                 Exit();
 
             // TODO: Add your update logic here
+            PhysicsManager.Instance.update((float)gameTime.ElapsedGameTime.TotalSeconds);
             actorManager.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
 
             base.Update(gameTime);
@@ -104,6 +106,7 @@ namespace LD39
 
 
         void StartGame(){
+
             actorManager.createActor<PlayerActor>("Robot", new Vector2(256, 256));
         }
     }

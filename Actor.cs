@@ -37,7 +37,7 @@ namespace LD39{
         public void setPosition(Vector2 pos){
             position = pos;
         }
-        public Vector2 getPosition() { return position; }
+        public virtual Vector2 getPosition() { return position; }
 
         public void setSize(Vector2 s) {
             size = s;
