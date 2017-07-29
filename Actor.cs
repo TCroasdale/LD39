@@ -11,6 +11,7 @@ using Microsoft.Xna.Framework.Input;
 namespace LD39{
     abstract class Actor{
 
+
         /// <summary>
         /// Called when the actor is created.
         /// </summary>
@@ -31,9 +32,12 @@ namespace LD39{
             sprite = spr;
         }
 
+        public Texture2D getSprite() { return sprite; }
+
         public void setPosition(Vector2 pos){
             position = pos;
         }
+        public Vector2 getPosition() { return position; }
 
         public void setSize(Vector2 s) {
             size = s;

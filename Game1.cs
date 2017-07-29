@@ -15,6 +15,8 @@ namespace LD39
         Texture2D playerSprite;
         Texture2D groundSprite;
         Texture2D batterySprite;
+
+        ActorManager actorManager;
         
         public Game1()
         {
@@ -37,6 +39,11 @@ namespace LD39
             // TODO: Add your initialization logic here
 
             base.Initialize();
+
+            actorManager = new ActorManager();
+
+            //Starting the game.
+            StartGame();
         }
 
         /// <summary>
@@ -49,7 +56,8 @@ namespace LD39
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
-           playerSprite = Content.Load<Texture2D>("Robo");
+            ArtManager.Instance.addTexture("Player", Content.Load<Texture2D>("Robo"));
+
         }
 
         /// <summary>
@@ -73,6 +81,7 @@ namespace LD39
                 Exit();
 
             // TODO: Add your update logic here
+            actorManager.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
 
             base.Update(gameTime);
         }
@@ -86,8 +95,16 @@ namespace LD39
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             // TODO: Add your drawing code here
+            spriteBatch.Begin();
+            actorManager.Draw(spriteBatch);
+            spriteBatch.End();
 
             base.Draw(gameTime);
+        }
+
+
+        void StartGame(){
+            actorManager.createActor<PlayerActor>("Robot", new Vector2(256, 256));
         }
     }
 }
