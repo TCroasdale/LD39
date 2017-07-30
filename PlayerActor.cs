@@ -245,6 +245,12 @@ namespace LD39
             }
         }
 
+        public void resetValues()
+        {
+            score = 0;
+            currPower = maxPower;
+        }
+
         Body playerBody;
         CircleShape circleshape;
         Fixture fixture;

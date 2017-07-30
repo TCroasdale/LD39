@@ -54,9 +54,14 @@ namespace LD39
                 enemy.canMove = false;
             }
             isProgressing = true;
+
+            UiManager.Instance.getUi("fistCtrl").isVisible = false;
+            UiManager.Instance.getUi("jumpCtrl").isVisible = false;
+            UiManager.Instance.getUi("leftCtrl").isVisible = false;
+            UiManager.Instance.getUi("rightCtrl").isVisible = false;
         }
 
-        public void Update(){
+        public void Update(float deltaTime){
             if (!hasFailed)
             {
                 if (ActorManager.Instance.getNumWithTag("Enemy") == 0 && !isProgressing)
@@ -66,8 +71,10 @@ namespace LD39
                 }
                 if (canProgress)
                 {
-                    if (Keyboard.GetState().IsKeyDown(Keys.Space))
+                    progressTimer -= deltaTime;
+                    if (Keyboard.GetState().IsKeyDown(Keys.Space) || progressTimer < 0)
                     {
+                        progressTimer = 7.5f;
                         canProgress = false;
                         UiManager.Instance.getUi("ClearMsg").isVisible = false;
                         progressGame();
@@ -116,11 +123,17 @@ namespace LD39
             PlayerActor playerActor = ActorManager.Instance.getFirstWithTag("Player") as PlayerActor;
             playerActor.setBarFGUi(barFG);
             playerActor.setScoreUi(ScoreUI);
+            playerActor.resetValues();
 
             UiElement winUI = UiManager.Instance.getUi("ClearMsg");
             winUI.isVisible = false;
             UiElement goUI = UiManager.Instance.getUi("FailureMsg");
             goUI.isVisible = false;
+
+            UiManager.Instance.getUi("fistCtrl").isVisible = true;
+            UiManager.Instance.getUi("jumpCtrl").isVisible = true;
+            UiManager.Instance.getUi("leftCtrl").isVisible = true;
+            UiManager.Instance.getUi("rightCtrl").isVisible = true;
 
             /*----- TEMP -----*/
             EnemyActor enemy = ActorManager.Instance.createActor<EnemyActor>("enemy", new Vector2(400, 10)) as EnemyActor;
@@ -135,6 +148,8 @@ namespace LD39
         }
 
         public Camera getCamera() { return cam; }
+
+        float progressTimer = 7.5f;
 
     }
 }

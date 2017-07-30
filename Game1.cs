@@ -95,6 +95,8 @@ namespace LD39
             AudioManager.Instance.addSfx("Coin", Content.Load<SoundEffect>("CoinPickup"));
             AudioManager.Instance.addSfx("Death", Content.Load<SoundEffect>("DeathSound"));
             AudioManager.Instance.addSfx("Hit", Content.Load<SoundEffect>("HitSound"));
+            AudioManager.Instance.addSfx("DroneDeath", Content.Load<SoundEffect>("DroneDeath"));
+            AudioManager.Instance.addSfx("Hit2", Content.Load<SoundEffect>("HitSound2"));
             AudioManager.Instance.addSfx("Jump", Content.Load<SoundEffect>("JumpSound"));
             AudioManager.Instance.setBackgroundMusic(Content.Load<Song>("FinalExport"));
 
@@ -102,6 +104,10 @@ namespace LD39
             ArtManager.Instance.addTexture("Clear_Ui", Content.Load<Texture2D>("CLEAR_ui"));
             ArtManager.Instance.addTexture("PowerBarBG", Content.Load<Texture2D>("PowerBar_BG"));
             ArtManager.Instance.addTexture("PowerBarFG", Content.Load<Texture2D>("PowerBar_FG"));
+            ArtManager.Instance.addTexture("LeftCtrl", Content.Load<Texture2D>("ctrl_left_ui"));
+            ArtManager.Instance.addTexture("RightCtrl", Content.Load<Texture2D>("ctrl_right_ui"));
+            ArtManager.Instance.addTexture("FistCtrl", Content.Load<Texture2D>("ctrl_fist_ui"));
+            ArtManager.Instance.addTexture("JumpCtrl", Content.Load<Texture2D>("ctrl_jump_ui"));
             UiManager.Instance.setFont(Content.Load<SpriteFont>("Font"));
         }
 
@@ -129,7 +135,7 @@ namespace LD39
             PhysicsManager.Instance.update((float)gameTime.ElapsedGameTime.TotalSeconds);
             ActorManager.Instance.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
             cam.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
-            GameManager.Instance.Update();
+            GameManager.Instance.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
             AudioManager.Instance.update((float)gameTime.ElapsedGameTime.TotalSeconds);
 
             base.Update(gameTime);
@@ -179,6 +185,11 @@ namespace LD39
             UiElement barBG = UiManager.Instance.addUi("BarBG", new Vector2(656, 0), new Vector2(144, 24), "<IMG>PowerBarBG");
             UiElement barFG = UiManager.Instance.addUi("BarFG", new Vector2(656+21, 0+4), new Vector2(121, 16), "<IMG>PowerBarFG");
             playerActor.setBarFGUi(barFG);
+
+            UiManager.Instance.addUi("fistCtrl", new Vector2(624, 568), new Vector2(80, 32), "<IMG>FistCtrl");
+            UiManager.Instance.addUi("leftCtrl", new Vector2(704, 568), new Vector2(32, 32), "<IMG>LeftCtrl");
+            UiManager.Instance.addUi("jumpCtrl", new Vector2(736, 568), new Vector2(32, 32), "<IMG>JumpCtrl");
+            UiManager.Instance.addUi("rightCtrl", new Vector2(768, 568), new Vector2(32, 32), "<IMG>RightCtrl");
         }
 
     }

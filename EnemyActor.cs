@@ -40,10 +40,14 @@ namespace LD39
             if (info.other.tag == "Fist" && canTakeDamage)
             {
                 canTakeDamage = false;
-                AudioManager.Instance.fireSfx("Hit");
                 hp--;
                 if (hp == 0){
                     ActorManager.Instance.deleteActor(this);
+                    AudioManager.Instance.fireSfx("DroneDeath");
+                }
+                else
+                {
+                    AudioManager.Instance.fireSfx("Hit2");
                 }
                 isHit = true;
                 knockbackDir = getPosition() - info.other.getPosition();
