@@ -16,7 +16,7 @@ namespace LD39
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-
+        Camera cam;
         
         public Game1()
         {
@@ -46,6 +46,9 @@ namespace LD39
             LevelManager.Instance.setTileset("Tiles");
 
             UiManager.Instance.createSpriteBatch(GraphicsDevice);
+
+            cam = new Camera();
+            GameManager.Instance.initialise(cam);
 
             //Starting the game.
             StartGame();
@@ -112,6 +115,8 @@ namespace LD39
             // TODO: Add your update logic here
             PhysicsManager.Instance.update((float)gameTime.ElapsedGameTime.TotalSeconds);
             ActorManager.Instance.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
+            cam.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
+            GameManager.Instance.Update();
 
             base.Update(gameTime);
         }
@@ -125,7 +130,7 @@ namespace LD39
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             // TODO: Add your drawing code here
-            spriteBatch.Begin();
+            spriteBatch.Begin(SpriteSortMode.BackToFront, null, null, null, null, null, cam.GetTransform());
 
             
             LevelManager.Instance.drawLevel(spriteBatch);
@@ -163,5 +168,6 @@ namespace LD39
             UiElement barFG = UiManager.Instance.addUi("BarFG", new Vector2(672+5, 0+4), new Vector2(121, 8), "<IMG>PowerBarFG");
             playerActor.setBarFGUi(barFG);
         }
+
     }
 }

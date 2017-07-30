@@ -27,7 +27,10 @@ namespace LD39
         #region SINGLETON IMPL
         private static LevelManager instance;
 
-        private LevelManager() { }
+        private LevelManager() {
+            files = new List<string>();
+            files.Add("BaseLevel.oel");
+        }
 
         public static LevelManager Instance
         {
@@ -52,7 +55,6 @@ namespace LD39
                         switch (reader.Name)
                         {
                             case "rect":
-                                Console.WriteLine("found static collider.");
                                 do
                                 {
                                     int x = int.Parse(reader.GetAttribute("x"));
@@ -87,7 +89,6 @@ namespace LD39
                                 actor.amount = 100;
                                 break;
                             case "tile":
-                                Console.WriteLine("Found Tile");
                                 do
                                 {
                                     int x = int.Parse(reader.GetAttribute("x"));
@@ -95,14 +96,13 @@ namespace LD39
                                     int tx = int.Parse(reader.GetAttribute("tx"));
                                     int ty = int.Parse(reader.GetAttribute("ty"));
 
-                                    addTile(x, y, tx, ty);
+                                    addTile(x*32, y*32, tx, ty);
 
                                     reader.Read();
                                 } while (reader.Name == "tile");
                                 break;
 
                             case "detail":
-                                Console.WriteLine("Found detail");
                                 do
                                 {
                                     int x = int.Parse(reader.GetAttribute("x"));
@@ -110,7 +110,7 @@ namespace LD39
                                     int tx = int.Parse(reader.GetAttribute("tx"));
                                     int ty = int.Parse(reader.GetAttribute("ty"));
 
-                                    addDetail(x, y, tx, ty);
+                                    addDetail(x*32, y*32, tx, ty);
 
                                     reader.Read();
                                 } while (reader.Name == "tile");
@@ -126,11 +126,99 @@ namespace LD39
         }
 
 
+        public void AddRandomLevel(int offset)
+        {
+            Random rand = new Random();
+            string fileName = files[rand.Next(files.Count - 1)];
+            using (XmlReader reader = XmlReader.Create(levelLocation + fileName))
+            {
+                Console.WriteLine("Reading file: " + fileName);
+                while (reader.Read())
+                {
+                    if (reader.IsStartElement())
+                    {
+                        switch (reader.Name)
+                        {
+                            case "rect":
+                                do
+                                {
+                                    int x = int.Parse(reader.GetAttribute("x"));
+                                    int y = int.Parse(reader.GetAttribute("y"));
+                                    int w = int.Parse(reader.GetAttribute("w"));
+                                    int h = int.Parse(reader.GetAttribute("h"));
+                                    Console.WriteLine("Adding collider at: {0}, {1}", x * 32, y * 32 - offset);
+                                    PhysicsManager.Instance.addStaticCollider(x * 32, y * 32 - offset, w * 32, h * 32);
+                                    reader.Read();
+                                } while (reader.Name == "rect");
+                                break;
+                            case "PlayerStart":
+                                int xPos = int.Parse(reader.GetAttribute("x"));
+                                int yPos = int.Parse(reader.GetAttribute("y"));
+                                //ActorManager.Instance.createActor<PlayerActor>("Player", new Vector2(xPos, offset + yPos));
+                                break;
+                            case "Battery":
+                                xPos = int.Parse(reader.GetAttribute("x"));
+                                yPos = int.Parse(reader.GetAttribute("y"));
+                                Console.WriteLine("Adding Battery at: {0}, {1}", xPos, offset + yPos);
+                                ActorManager.Instance.createActor<PowerPlusActor>("Battery", new Vector2(xPos, yPos - offset));
+                                break;
+                            case "Coin_gold":
+                                xPos = int.Parse(reader.GetAttribute("x"));
+                                yPos = int.Parse(reader.GetAttribute("y"));
+                                Console.WriteLine("Adding gold coin at: {0}, {1}", xPos, offset + yPos);
+                                CoinActor actor = ActorManager.Instance.createActor<CoinActor>("GoldCoin", new Vector2(xPos, yPos - offset)) as CoinActor;
+                                actor.amount = 250;
+                                actor.setSprite(ArtManager.Instance.getTexture("GoldCoin"));
+                                break;
+                            case "Coin_Silver":
+                                xPos = int.Parse(reader.GetAttribute("x"));
+                                yPos = int.Parse(reader.GetAttribute("y"));
+                                Console.WriteLine("Adding silver coin at: {0}, {1}", xPos, offset + yPos);
+                                actor = ActorManager.Instance.createActor<CoinActor>("SilvCoin", new Vector2(xPos, yPos - offset)) as CoinActor;
+                                actor.amount = 100;
+                                break;
+                            case "tile":
+                                do
+                                {
+                                    int x = int.Parse(reader.GetAttribute("x"));
+                                    int y = int.Parse(reader.GetAttribute("y"));
+                                    int tx = int.Parse(reader.GetAttribute("tx"));
+                                    int ty = int.Parse(reader.GetAttribute("ty"));
+                                    Console.WriteLine("Adding Tile at: {0}, {1}", x, y - offset);
+                                    addTile(x * 32, y * 32 - offset, tx, ty);
+
+                                    reader.Read();
+                                } while (reader.Name == "tile");
+                                break;
+
+                            case "detail":
+                                do
+                                {
+                                    int x = int.Parse(reader.GetAttribute("x"));
+                                    int y = int.Parse(reader.GetAttribute("y"));
+                                    int tx = int.Parse(reader.GetAttribute("tx"));
+                                    int ty = int.Parse(reader.GetAttribute("ty"));
+                                    Console.WriteLine("Adding detail at: {0}, {1}", x, y - offset);
+                                    addDetail(x * 32, y * 32 - offset, tx, ty);
+
+                                    reader.Read();
+                                } while (reader.Name == "tile");
+                                break;
+                            default:
+                                //Console.WriteLine("Fucked up with: " + reader.Name);
+                                break;
+
+                        }
+                    }
+                }
+            }
+        }
+
 
         public void drawLevel(SpriteBatch spriteBatch){
             foreach(Tile tile in tiles)
             {
-                Rectangle destRect = new Rectangle(tile.x * tile.tSize, tile.y * tile.tSize, 32, 32);
+                Rectangle destRect = new Rectangle(tile.x, tile.y, 32, 32);
                 Rectangle srcRect = new Rectangle(tile.tx * tile.tSize, tile.ty * tile.tSize, 32, 32);
                 spriteBatch.Draw(Tileset, destRect, srcRect, Color.White);
             }
@@ -140,7 +228,7 @@ namespace LD39
         {
             foreach (Tile tile in detailTiles)
             {
-                Rectangle destRect = new Rectangle(tile.x * tile.tSize, tile.y * tile.tSize, 32, 32);
+                Rectangle destRect = new Rectangle(tile.x, tile.y, 32, 32);
                 Rectangle srcRect = new Rectangle(tile.tx * tile.tSize, tile.ty * tile.tSize, 32, 32);
                 spriteBatch.Draw(Tileset, destRect, srcRect, Color.White);
             }
@@ -172,5 +260,6 @@ namespace LD39
         private Texture2D Tileset;
         private List<Tile> tiles;
         private List<Tile> detailTiles;
+        private List<string> files;
     }
 }

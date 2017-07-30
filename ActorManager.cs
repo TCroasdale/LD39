@@ -93,7 +93,8 @@ namespace LD39
         }
 
 
-        public Actor getFirstWithTag(string tag){
+        public Actor getFirstWithTag(string tag)
+        {
             foreach (Actor actor in actors)
             {
                 if (actor.tag == tag)
@@ -109,6 +110,39 @@ namespace LD39
                 }
             }
             return null;
+        }
+
+        public int getNumWithTag(string tag)
+        {
+            int ret = 0;
+            foreach (Actor actor in actors)
+            {
+                if (actor.tag == tag)
+                {
+                    ret++;
+                }
+            }
+            return ret;
+        }
+
+        public List<Actor> getAllWithTag(string tag)
+        {
+            List<Actor> list = new List<Actor>();
+            foreach (Actor actor in actors)
+            {
+                if (actor.tag == tag)
+                {
+                    list.Add(actor);
+                }
+            }
+            foreach (Actor actor in actorsToAdd)
+            {
+                if (actor.tag == tag)
+                {
+                    list.Add(actor);
+                }
+            }
+            return list;
         }
 
 

@@ -145,5 +145,7 @@ namespace LD39
         bool canTakeDamage = true;
         float dmgTimeout = 0.5f;
         float dmgTimer = 0.5f;
+
+        public bool canMove = false;
     }
 }
