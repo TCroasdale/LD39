@@ -11,6 +11,7 @@ using Microsoft.Xna.Framework.Input;
 namespace LD39{
     public abstract class Actor{
 
+        public int id;
 
         /// <summary>
         /// Called when the actor is created.
@@ -25,6 +26,8 @@ namespace LD39{
 
         abstract public bool OnCollision(collision info);
         abstract public void OnSeparation(collision info);
+
+        abstract public void OnDestroy();
 
         /// <summary>
         /// Called once per frame on every actor can be used to draw extra things on the screen

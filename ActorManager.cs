@@ -17,9 +17,9 @@ namespace LD39
         private static ActorManager instance;
 
         private ActorManager() {
-            actors = new Dictionary<string, Actor>();
-            actorsToAdd = new Dictionary<string, Actor>();
-            actorsToDelete = new List<string>();
+            actors = new List<Actor>();
+            actorsToAdd = new List<Actor>();
+            actorsToDelete = new List<Actor>();
         }
 
         public static ActorManager Instance
@@ -40,66 +40,63 @@ namespace LD39
 
             newActor.setPosition(position);
             newActor.initialise();
-            while(actors.ContainsKey(name)){
+            /*while(actors.ContainsKey(name)){
                 name += "_";
             }
-            actors.Add(name, newActor);
-
+            while (actorsToAdd.ContainsKey(name))
+            {
+                name += "_";
+            }*/
+            actorsToAdd.Add(newActor);
+            newActor.id = currID;
+            currID++;
             return newActor;
         }
 
         public void Update(float deltaTime){
-            foreach (KeyValuePair<string, Actor> actor in actors){
-                int status = actor.Value.Update(deltaTime);
+            foreach (Actor actor in actors){
+                int status = actor.Update(deltaTime);
                 //If the actor update returns non zero, delete it.
                 if(status != 0){
-                    actorsToDelete.Add(actor.Key);
+                    actorsToDelete.Add(actor);
                 }
             }
 
-            foreach (string actor in actorsToDelete)
+            foreach (Actor actor in actorsToDelete)
             {
+                actor.OnDestroy();
                 actors.Remove(actor);
             }
             actorsToDelete.Clear();
 
-            foreach (KeyValuePair<string, Actor> actor in actorsToAdd)
+            foreach (Actor actor in actorsToAdd)
             {
-                actors.Add(actor.Key, actor.Value);
+                actors.Add(actor);
             }
             actorsToAdd.Clear();
         }
 
         public void Draw(SpriteBatch sb)
         {
-            foreach (KeyValuePair<string, Actor> actor in actors)
+            foreach (Actor actor in actors)
             {
-                sb.Draw(actor.Value.getSprite(), actor.Value.getPosition(), Color.White);
-                actor.Value.Draw(sb);
+                actor.Draw(sb);
+                sb.Draw(actor.getSprite(), actor.getPosition(), Color.White);
             }
         }
 
         public void deleteActor(Actor actor){
-            if (actors.ContainsValue(actor))
+            if (actors.Contains(actor))
             {
-                actorsToDelete.Add(getKeyForActor(actor));
+                actorsToDelete.Add(actor);
             }
         }
 
-        public string getKeyForActor(Actor actor)
-        {
-            foreach(KeyValuePair<string, Actor> actor2 in actors)
-            {
-                if(actor == actor2.Value)
-                {
-                    return actor2.Key;
-                }
-            }
-            return "NONE";
-        }
 
-        private Dictionary<string, Actor> actors;
-        private Dictionary<string, Actor> actorsToAdd;
-        private List<string> actorsToDelete;
+        private List<Actor> actors;
+        private List<Actor> actorsToAdd;
+        private List<Actor> actorsToDelete;
+
+        int currID = 0;
     }
 }

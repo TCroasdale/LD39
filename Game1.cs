@@ -60,6 +60,10 @@ namespace LD39
             ArtManager.Instance.addTexture("Player", Content.Load<Texture2D>("Robo"));
             ArtManager.Instance.addTexture("Player_right", Content.Load<Texture2D>("Robo_right"));
             ArtManager.Instance.addTexture("Player_left", Content.Load<Texture2D>("Robo_left"));
+            ArtManager.Instance.addTexture("Player_Fist", Content.Load<Texture2D>("RoboFist"));
+            ArtManager.Instance.addTexture("Player_Arm", Content.Load<Texture2D>("RoboArm"));
+            ArtManager.Instance.addTexture("Player_Fist_Vert", Content.Load<Texture2D>("RoboFist_Vert"));
+            ArtManager.Instance.addTexture("Player_Arm_Vert", Content.Load<Texture2D>("RoboArm_Vert"));
             ArtManager.Instance.addTexture("Tiles", Content.Load<Texture2D>("Tiles"));
             ArtManager.Instance.addTexture("Battery", Content.Load<Texture2D>("Battery"));
             ArtManager.Instance.addTexture("SilverCoin", Content.Load<Texture2D>("SilverCoin"));
@@ -107,7 +111,7 @@ namespace LD39
 
             ActorManager.Instance.Draw(spriteBatch);
             LevelManager.Instance.drawLevel(spriteBatch);
-            //PhysicsManager.Instance.debugDraw(spriteBatch);
+            PhysicsManager.Instance.debugDraw(spriteBatch);
             spriteBatch.End();
 
             base.Draw(gameTime);

@@ -33,6 +33,11 @@ namespace LD39
             setSize(new Vector2(12, 12));
         }
 
+        public override void OnDestroy()
+        {
+            PhysicsManager.Instance.removeAndUnRegister(fixture, body);
+        }
+
         public override bool OnCollision(collision info)
         {
             return false;

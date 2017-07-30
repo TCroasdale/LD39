@@ -41,19 +41,24 @@ namespace LD39
             bool keyLeft = Keyboard.GetState().IsKeyDown(Keys.Left);
             bool keyRight = Keyboard.GetState().IsKeyDown(Keys.Right);
 
+            int direction = 1;
+
             if (keyLeft && !keyRight){
                 moveHor = -1.0f;
                 setSprite(ArtManager.Instance.getTexture("Player_left"));
+                direction = 0;
             }else if (keyRight && !keyLeft) {
                 moveHor = 1.0f;
                 setSprite(ArtManager.Instance.getTexture("Player_right"));
+                direction = 2;
             }
             else{
                 setSprite(ArtManager.Instance.getTexture("Player"));
+                direction = 1;
             }
 
 
-            if (Keyboard.GetState().IsKeyDown(Keys.Space) && isGrounded)
+            if (Keyboard.GetState().IsKeyDown(Keys.Up) && isGrounded)
             {
                 playerBody.ApplyForce(new Vector2(0, jumpForce));
                 currPower -= jumpPowerDecrease;
@@ -65,8 +70,23 @@ namespace LD39
             }
 
 
-            currPower -= Math.Abs(moveHor) * walkPowerDecrease;
-            playerBody.LinearVelocity = new Vector2(moveHor * moveSpeed, playerBody.LinearVelocity.Y);
+            if (Keyboard.GetState().IsKeyDown(Keys.Space) && !isAttacking){
+                isAttacking = true;
+                canMove = false;
+                FistActor fist = ActorManager.Instance.createActor<FistActor>("Fist", getPosition() + new Vector2(0, 8)) as FistActor;
+                fist.setUp(direction, this);
+            }
+
+
+            if (canMove)
+            {
+                currPower -= Math.Abs(moveHor) * walkPowerDecrease;
+                playerBody.LinearVelocity = new Vector2(moveHor * moveSpeed, playerBody.LinearVelocity.Y);
+            }
+            else
+            {
+                playerBody.LinearVelocity = new Vector2(0, playerBody.LinearVelocity.Y);
+            }
             Console.WriteLine("CurrentPower: {0}", currPower);
             return 0;
         }
@@ -118,7 +138,16 @@ namespace LD39
             }
         }
 
+        public void stopAttacking()
+        {
+            canMove = true;
+            isAttacking = false;
+        }
 
+        public override void OnDestroy()
+        {
+            PhysicsManager.Instance.removeAndUnRegister(fixture, playerBody);
+        }
 
         Body playerBody;
         CircleShape circleshape;
@@ -132,11 +161,14 @@ namespace LD39
         bool isGrounded;
 
 
-        float maxPower = 100.0f;
+        float maxPower = 150.0f;
         float currPower = 100.0f;
         float walkPowerDecrease = 0.25f;
         float jumpPowerDecrease = 1f;
 
         int score = 0;
+
+        public bool canMove = true;
+        public bool isAttacking = false;
     }
 }

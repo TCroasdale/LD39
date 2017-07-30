@@ -92,6 +92,13 @@ namespace LD39
             f.OnSeparation += onActorSeperation;
         }
 
+        public void removeAndUnRegister(Fixture f, Body b){
+            fixtureActorMapping.Remove(f);
+            world.RemoveBody(b);
+            b.Dispose();
+            f.Dispose();
+        }
+
         public bool onStaticColliderCollision(Fixture f1, Fixture f2, Contact contact){
             Console.WriteLine("Collided with {0}");
             return true;

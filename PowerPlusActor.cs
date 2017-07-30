@@ -18,6 +18,11 @@ namespace LD39
             
         }
 
+        public override void OnDestroy()
+        {
+            PhysicsManager.Instance.removeAndUnRegister(fixture, body);
+        }
+
         public override void initialise()
         {
             setSprite(ArtManager.Instance.getTexture("Battery"));
