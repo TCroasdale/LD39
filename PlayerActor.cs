@@ -45,15 +45,15 @@ namespace LD39
 
             if (keyLeft && !keyRight){
                 moveHor = -1.0f;
-                setSprite(ArtManager.Instance.getTexture("Player_left"));
+                if(!isAttacking) setSprite(ArtManager.Instance.getTexture("Player_left"));
                 direction = 0;
             }else if (keyRight && !keyLeft) {
                 moveHor = 1.0f;
-                setSprite(ArtManager.Instance.getTexture("Player_right"));
+                if (!isAttacking) setSprite(ArtManager.Instance.getTexture("Player_right"));
                 direction = 2;
             }
             else{
-                setSprite(ArtManager.Instance.getTexture("Player"));
+                if (!isAttacking) setSprite(ArtManager.Instance.getTexture("Player"));
                 direction = 1;
             }
 
@@ -73,7 +73,12 @@ namespace LD39
             if (Keyboard.GetState().IsKeyDown(Keys.Space) && !isAttacking){
                 isAttacking = true;
                 canMove = false;
-                FistActor fist = ActorManager.Instance.createActor<FistActor>("Fist", getPosition() + new Vector2(0, 8)) as FistActor;
+                Vector2 offset = Vector2.Zero;
+                if (direction == 0) { offset = new Vector2(12, 20); }
+                if (direction == 1) { offset = new Vector2(12, 8); }
+                if (direction == 2) { offset = new Vector2(20, 20); }
+
+                FistActor fist = ActorManager.Instance.createActor<FistActor>("Fist", getPosition() + offset) as FistActor;
                 fist.setUp(direction, this);
             }
 
@@ -87,9 +92,9 @@ namespace LD39
             {
                 playerBody.LinearVelocity = new Vector2(0, playerBody.LinearVelocity.Y);
             }
-            Console.WriteLine("CurrentPower: {0}", currPower);
 
-            if(currPower <= 0)
+            bool badPosition = (getPosition().X < 0 || getPosition().X > 800 ||getPosition().Y < 0);
+            if(currPower <= 0 || badPosition)
             {
                 GameOver();
             }
@@ -115,7 +120,7 @@ namespace LD39
         {
             if (info.other == null)
             {
-                if (playerBody.LinearVelocity.Y > 0 || (playerBody.LinearVelocity.X > -0.1 && playerBody.LinearVelocity.X < 0.1))
+                if (playerBody.LinearVelocity.Y > 0)//|| (playerBody.LinearVelocity.X > -0.1 && playerBody.LinearVelocity.X < 0.1))
                 {
                     isGrounded = true;
                     return true;
@@ -135,6 +140,13 @@ namespace LD39
                     score += ((CoinActor)info.other).amount;
                     ActorManager.Instance.deleteActor(info.other);
                     AudioManager.Instance.fireSfx("Coin");
+                }
+                else
+                {
+                    if (info.other.tag == "Enemy")
+                    {
+                        currPower -= hitPowerDecrease;
+                    }
                 }
                 return false;
             }
@@ -208,10 +220,11 @@ namespace LD39
         bool isGrounded;
 
 
-        float maxPower = 150.0f;
-        float currPower = 100.0f;
+        float maxPower = 200.0f;
+        float currPower = 200.0f;
         float walkPowerDecrease = 0.25f;
         float jumpPowerDecrease = 1f;
+        float hitPowerDecrease = 5f;
 
         int score = 0;
 

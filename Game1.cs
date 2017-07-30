@@ -72,6 +72,8 @@ namespace LD39
             ArtManager.Instance.addTexture("Battery", Content.Load<Texture2D>("Battery"));
             ArtManager.Instance.addTexture("SilverCoin", Content.Load<Texture2D>("SilverCoin"));
             ArtManager.Instance.addTexture("GoldCoin", Content.Load<Texture2D>("GoldCoin"));
+            ArtManager.Instance.addTexture("DroneLeft", Content.Load<Texture2D>("Drone_left"));
+            ArtManager.Instance.addTexture("DroneRight", Content.Load<Texture2D>("Drone_right"));
 
             AudioManager.Instance.addSfx("Battery", Content.Load<SoundEffect>("BatteryPickup"));
             AudioManager.Instance.addSfx("Coin", Content.Load<SoundEffect>("CoinPickup"));
@@ -146,6 +148,11 @@ namespace LD39
             UiElement ScoreUI = UiManager.Instance.addUi("Test UI", new Vector2(8, 8), new Vector2(128, 24), "Score: 0");
             PlayerActor playerActor = ActorManager.Instance.getFirstWithTag("Player") as PlayerActor;
             playerActor.setScoreUi(ScoreUI);
+
+            /*----- TEMP -----*/
+            EnemyActor enemy = ActorManager.Instance.createActor<EnemyActor>("enemy", new Vector2(400, 10)) as EnemyActor;
+            enemy.setActor(playerActor);
+
 
             UiElement winUI = UiManager.Instance.addUi("ClearMsg", new Vector2(0, 128), new Vector2(800, 128), "<IMG>Clear_Ui");
             winUI.isVisible = false;

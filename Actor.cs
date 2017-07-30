@@ -47,8 +47,13 @@ namespace LD39{
             return position - size / 2;
         }
 
-        public void setSize(Vector2 s) {
+        public void setSize(Vector2 s)
+        {
             size = s;
+        }
+        public Vector2 getSize()
+        {
+            return size;
         }
 
         public string tag = "Actor";

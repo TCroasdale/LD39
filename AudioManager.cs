@@ -51,7 +51,7 @@ namespace LD39
         public void playMusic(){
             MediaPlayer.Play(backgroundMusic);
             MediaPlayer.IsRepeating = true;
-            MediaPlayer.Volume = 0.5f;
+            MediaPlayer.Volume = 0.8f;
         }
 
     }
