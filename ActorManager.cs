@@ -93,6 +93,25 @@ namespace LD39
         }
 
 
+        public Actor getFirstWithTag(string tag){
+            foreach (Actor actor in actors)
+            {
+                if (actor.tag == tag)
+                {
+                    return actor;
+                }
+            }
+            foreach (Actor actor in actorsToAdd)
+            {
+                if (actor.tag == tag)
+                {
+                    return actor;
+                }
+            }
+            return null;
+        }
+
+
         private List<Actor> actors;
         private List<Actor> actorsToAdd;
         private List<Actor> actorsToDelete;

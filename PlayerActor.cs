@@ -88,6 +88,17 @@ namespace LD39
                 playerBody.LinearVelocity = new Vector2(0, playerBody.LinearVelocity.Y);
             }
             Console.WriteLine("CurrentPower: {0}", currPower);
+
+            if(currPower <= 0)
+            {
+                GameOver();
+            }
+
+            if (scoreUi != null){
+                scoreUi.setContent(score.ToString());
+            }
+            UpdateBarUi();
+
             return 0;
         }
 
@@ -117,11 +128,13 @@ namespace LD39
                 {
                     currPower = maxPower;
                     ActorManager.Instance.deleteActor(info.other);
+                    AudioManager.Instance.fireSfx("Battery");
                 }
                 else if (info.other.tag == "Coin")
                 {
                     score += ((CoinActor)info.other).amount;
                     ActorManager.Instance.deleteActor(info.other);
+                    AudioManager.Instance.fireSfx("Coin");
                 }
                 return false;
             }
@@ -149,6 +162,40 @@ namespace LD39
             PhysicsManager.Instance.removeAndUnRegister(fixture, playerBody);
         }
 
+        public void setScoreUi(UiElement elem){
+            scoreUi = elem;
+        }
+
+        public void setBarFGUi(UiElement elem){
+            barFG = elem;
+            initBarWidth = barFG.getSize().X;
+            initLeftPos = barFG.getPosition().X;
+        }
+
+        public void UpdateBarUi(){
+            float percPower = currPower / maxPower;
+            float barWidth = initBarWidth * percPower;
+            Vector2 Size = barFG.getSize();
+            Size.X = barWidth;
+            barFG.setSize(Size);
+
+
+            Vector2 Pos = barFG.getPosition();
+            Pos.X = 800 - barWidth;
+            barFG.setPosition(Pos);
+
+            if (percPower < 0.25){ barFG.setColor(Color.Red); }
+            else if (percPower < 0.5){ barFG.setColor(Color.MonoGameOrange); }
+            else{ barFG.setColor(Color.Blue); }
+        }
+
+        public void GameOver()
+        {
+            AudioManager.Instance.fireSfx("Death");
+            UiManager.Instance.getUi("FailureMsg").isVisible = true;
+            ActorManager.Instance.deleteActor(this);
+        }
+
         Body playerBody;
         CircleShape circleshape;
         Fixture fixture;
@@ -170,5 +217,11 @@ namespace LD39
 
         public bool canMove = true;
         public bool isAttacking = false;
+
+
+        UiElement scoreUi;
+        UiElement barFG;
+        float initBarWidth;
+        float initLeftPos;
     }
 }

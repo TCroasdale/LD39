@@ -1,4 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Media;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
@@ -43,6 +45,8 @@ namespace LD39
             LevelManager.Instance.initialise();
             LevelManager.Instance.setTileset("Tiles");
 
+            UiManager.Instance.createSpriteBatch(GraphicsDevice);
+
             //Starting the game.
             StartGame();
         }
@@ -69,6 +73,18 @@ namespace LD39
             ArtManager.Instance.addTexture("SilverCoin", Content.Load<Texture2D>("SilverCoin"));
             ArtManager.Instance.addTexture("GoldCoin", Content.Load<Texture2D>("GoldCoin"));
 
+            AudioManager.Instance.addSfx("Battery", Content.Load<SoundEffect>("BatteryPickup"));
+            AudioManager.Instance.addSfx("Coin", Content.Load<SoundEffect>("CoinPickup"));
+            AudioManager.Instance.addSfx("Death", Content.Load<SoundEffect>("DeathSound"));
+            AudioManager.Instance.addSfx("Hit", Content.Load<SoundEffect>("HitSound"));
+            AudioManager.Instance.addSfx("Jump", Content.Load<SoundEffect>("JumpSound"));
+            AudioManager.Instance.setBackgroundMusic(Content.Load<Song>("FinalExport"));
+
+            ArtManager.Instance.addTexture("Failure_Ui", Content.Load<Texture2D>("FAILURE_ui"));
+            ArtManager.Instance.addTexture("Clear_Ui", Content.Load<Texture2D>("CLEAR_ui"));
+            ArtManager.Instance.addTexture("PowerBarBG", Content.Load<Texture2D>("PowerBar_BG"));
+            ArtManager.Instance.addTexture("PowerBarFG", Content.Load<Texture2D>("PowerBar_FG"));
+            UiManager.Instance.setFont(Content.Load<SpriteFont>("Font"));
         }
 
         /// <summary>
@@ -109,10 +125,14 @@ namespace LD39
             // TODO: Add your drawing code here
             spriteBatch.Begin();
 
-            ActorManager.Instance.Draw(spriteBatch);
+            
             LevelManager.Instance.drawLevel(spriteBatch);
-            PhysicsManager.Instance.debugDraw(spriteBatch);
+            ActorManager.Instance.Draw(spriteBatch);
+            LevelManager.Instance.drawLevelDetails(spriteBatch);
+            //PhysicsManager.Instance.debugDraw(spriteBatch);
             spriteBatch.End();
+
+            UiManager.Instance.Draw();
 
             base.Draw(gameTime);
         }
@@ -120,6 +140,21 @@ namespace LD39
 
         void StartGame(){
             LevelManager.Instance.loadFile("BaseLevel.oel");
+            AudioManager.Instance.playMusic();
+
+
+            UiElement ScoreUI = UiManager.Instance.addUi("Test UI", new Vector2(8, 8), new Vector2(128, 24), "Score: 0");
+            PlayerActor playerActor = ActorManager.Instance.getFirstWithTag("Player") as PlayerActor;
+            playerActor.setScoreUi(ScoreUI);
+
+            UiElement winUI = UiManager.Instance.addUi("ClearMsg", new Vector2(0, 128), new Vector2(800, 128), "<IMG>Clear_Ui");
+            winUI.isVisible = false;
+            UiElement goUI = UiManager.Instance.addUi("FailureMsg", new Vector2(0, 128), new Vector2(800, 128), "<IMG>Failure_Ui");
+            goUI.isVisible = false;
+
+            UiElement barBG = UiManager.Instance.addUi("BarBG", new Vector2(672, 0), new Vector2(128, 16), "<IMG>PowerBarBG");
+            UiElement barFG = UiManager.Instance.addUi("BarFG", new Vector2(672+5, 0+4), new Vector2(121, 8), "<IMG>PowerBarFG");
+            playerActor.setBarFGUi(barFG);
         }
     }
 }

@@ -94,11 +94,26 @@ namespace LD39
                                     int y = int.Parse(reader.GetAttribute("y"));
                                     int tx = int.Parse(reader.GetAttribute("tx"));
                                     int ty = int.Parse(reader.GetAttribute("ty"));
+
                                     addTile(x, y, tx, ty);
+
                                     reader.Read();
                                 } while (reader.Name == "tile");
                                 break;
-                            case "detailTiles":
+
+                            case "detail":
+                                Console.WriteLine("Found detail");
+                                do
+                                {
+                                    int x = int.Parse(reader.GetAttribute("x"));
+                                    int y = int.Parse(reader.GetAttribute("y"));
+                                    int tx = int.Parse(reader.GetAttribute("tx"));
+                                    int ty = int.Parse(reader.GetAttribute("ty"));
+
+                                    addDetail(x, y, tx, ty);
+
+                                    reader.Read();
+                                } while (reader.Name == "tile");
                                 break;
                             default:
                                 //Console.WriteLine("Fucked up with: " + reader.Name);
@@ -121,15 +136,31 @@ namespace LD39
             }
         }
 
+        public void drawLevelDetails(SpriteBatch spriteBatch)
+        {
+            foreach (Tile tile in detailTiles)
+            {
+                Rectangle destRect = new Rectangle(tile.x * tile.tSize, tile.y * tile.tSize, 32, 32);
+                Rectangle srcRect = new Rectangle(tile.tx * tile.tSize, tile.ty * tile.tSize, 32, 32);
+                spriteBatch.Draw(Tileset, destRect, srcRect, Color.White);
+            }
+        }
+
+
         public void addTile(int x, int y, int tx, int ty)
         {
             tiles.Add(new Tile(x, y, tx, ty, 32));
+        }
+        public void addDetail(int x, int y, int tx, int ty)
+        {
+            detailTiles.Add(new Tile(x, y, tx, ty, 32));
         }
 
         public void initialise(string locale = "Levels/")
         {
             levelLocation = locale;
             tiles = new List<Tile>();
+            detailTiles = new List<Tile>();
         }
 
         public void setTileset(string ts)
@@ -140,5 +171,6 @@ namespace LD39
         private string levelLocation;
         private Texture2D Tileset;
         private List<Tile> tiles;
+        private List<Tile> detailTiles;
     }
 }
