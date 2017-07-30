@@ -68,7 +68,7 @@ namespace LD39
                 body.LinearVelocity = new Vector2(0, -moveSpeed);
             }
 
-            currDist += moveSpeed * deltaTime;
+            currDist = (originalPos - getPosition()).Length();
             if(currDist > maxDist){
                 ((PlayerActor)owner).stopAttacking();
                 return 1;
@@ -108,8 +108,8 @@ namespace LD39
         private int Direction; //0=left, 1= up, 2 = right
         private Actor owner;
 
-        private float moveSpeed = 128.0f;
-        private float maxDist = 64.0f;
+        private float moveSpeed = 256.0f;
+        private float maxDist = 72.0f;
         private float currDist = 0.0f;
 
         Body body;

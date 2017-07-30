@@ -7,8 +7,6 @@ using Microsoft.Xna.Framework.Input;
 
 namespace LD39
 {
-
-
     /// <summary>
     /// This is the main type for your game.
     /// </summary>
@@ -67,6 +65,8 @@ namespace LD39
             ArtManager.Instance.addTexture("Player", Content.Load<Texture2D>("Robo"));
             ArtManager.Instance.addTexture("Player_right", Content.Load<Texture2D>("Robo_right"));
             ArtManager.Instance.addTexture("Player_left", Content.Load<Texture2D>("Robo_left"));
+            ArtManager.Instance.addTexture("Player_jump_right", Content.Load<Texture2D>("Robo_jump_right"));
+            ArtManager.Instance.addTexture("Player_jump_left", Content.Load<Texture2D>("Robo_jump_left"));
             ArtManager.Instance.addTexture("Player_Fist", Content.Load<Texture2D>("RoboFist"));
             ArtManager.Instance.addTexture("Player_Arm", Content.Load<Texture2D>("RoboArm"));
             ArtManager.Instance.addTexture("Player_Fist_Vert", Content.Load<Texture2D>("RoboFist_Vert"));
@@ -130,9 +130,7 @@ namespace LD39
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             // TODO: Add your drawing code here
-            spriteBatch.Begin(SpriteSortMode.BackToFront, null, null, null, null, null, cam.GetTransform());
-
-            
+            spriteBatch.Begin(SpriteSortMode.Deferred, null, null, null, null, null, cam.GetTransform());
             LevelManager.Instance.drawLevel(spriteBatch);
             ActorManager.Instance.Draw(spriteBatch);
             LevelManager.Instance.drawLevelDetails(spriteBatch);
@@ -150,7 +148,7 @@ namespace LD39
             AudioManager.Instance.playMusic();
 
 
-            UiElement ScoreUI = UiManager.Instance.addUi("Test UI", new Vector2(8, 8), new Vector2(128, 24), "Score: 0");
+            UiElement ScoreUI = UiManager.Instance.addUi("Score UI", new Vector2(8, 8), new Vector2(128, 24), "Score: 0");
             PlayerActor playerActor = ActorManager.Instance.getFirstWithTag("Player") as PlayerActor;
             playerActor.setScoreUi(ScoreUI);
 

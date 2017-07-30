@@ -35,6 +35,13 @@ namespace LD39
         }
         #endregion
 
+        public void reset()
+        {
+            actors.Clear();
+            actorsToAdd.Clear();
+            actorsToDelete.Clear();
+        }
+        
         public Actor createActor<T>(string name, Vector2 position) where T : Actor{
             Actor newActor = (T)Activator.CreateInstance(typeof(T));
 

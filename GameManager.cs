@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework.Input;
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -36,14 +37,16 @@ namespace LD39
         bool canProgress = false;
         bool isProgressing = false;
 
+        bool hasFailed = false;
+
         public void initialise(Camera c)
         {
             cam = c;
         }
         
         public void progressGame(){
-            cam.setTargetHeight(600 * (stage-1));
-            LevelManager.Instance.AddRandomLevel(600 * (stage-1));
+            cam.setTargetHeight(600 * (stage));
+            LevelManager.Instance.AddRandomLevel(600 * (stage));
             stage++;
             foreach(Actor actor in ActorManager.Instance.getAllWithTag("Enemy"))
             {
@@ -54,30 +57,80 @@ namespace LD39
         }
 
         public void Update(){
-            if(ActorManager.Instance.getNumWithTag("Enemy") == 0 &&!isProgressing){
-                canProgress = true;
-                UiManager.Instance.getUi("ClearMsg").isVisible = true;
-            }
-            if (canProgress)
+            if (!hasFailed)
             {
-                if (Keyboard.GetState().IsKeyDown(Keys.Space))
+                if (ActorManager.Instance.getNumWithTag("Enemy") == 0 && !isProgressing)
                 {
-                    canProgress = false;
-                    UiManager.Instance.getUi("ClearMsg").isVisible = false;
-                    progressGame();
+                    canProgress = true;
+                    UiManager.Instance.getUi("ClearMsg").isVisible = true;
                 }
-            }
-            if (isProgressing){
-                isProgressing = cam.isMoving;
-                if (!isProgressing){
-                    foreach (Actor actor in ActorManager.Instance.getAllWithTag("Enemy"))
+                if (canProgress)
+                {
+                    if (Keyboard.GetState().IsKeyDown(Keys.Space))
                     {
-                        EnemyActor enemy = (EnemyActor)actor;
-                        enemy.canMove = true;
+                        canProgress = false;
+                        UiManager.Instance.getUi("ClearMsg").isVisible = false;
+                        progressGame();
+                    }
+                }
+                if (isProgressing)
+                {
+                    isProgressing = cam.isMoving;
+                    if (!isProgressing)
+                    {
+                        foreach (Actor actor in ActorManager.Instance.getAllWithTag("Enemy"))
+                        {
+                            EnemyActor enemy = (EnemyActor)actor;
+                            enemy.canMove = true;
+                        }
                     }
                 }
             }
+            else
+            {
+                if (Keyboard.GetState().IsKeyDown(Keys.Space))
+                {
+                    resetGame();
+                }
+            }
         }
+
+        public void SetGameOver()
+        {
+            cam.setTargetHeight(0);
+            hasFailed = true;
+        }
+
+        public void resetGame()
+        {
+            LevelManager.Instance.reset();
+            cam.setHeight(0.0f);
+            ActorManager.Instance.reset();
+            PhysicsManager.Instance.reset();
+
+            LevelManager.Instance.loadFile("BaseLevel.oel");
+            AudioManager.Instance.playMusic();
+
+            UiElement ScoreUI = UiManager.Instance.getUi("Score UI");
+            UiElement barFG = UiManager.Instance.getUi("BarFG");
+            PlayerActor playerActor = ActorManager.Instance.getFirstWithTag("Player") as PlayerActor;
+            playerActor.setBarFGUi(barFG);
+            playerActor.setScoreUi(ScoreUI);
+
+            UiElement winUI = UiManager.Instance.getUi("ClearMsg");
+            winUI.isVisible = false;
+            UiElement goUI = UiManager.Instance.getUi("FailureMsg");
+            goUI.isVisible = false;
+
+            /*----- TEMP -----*/
+            EnemyActor enemy = ActorManager.Instance.createActor<EnemyActor>("enemy", new Vector2(400, 10)) as EnemyActor;
+            enemy.setActor(playerActor);
+
+            hasFailed = false;
+
+        }
+
+        public Camera getCamera() { return cam; }
 
     }
 }

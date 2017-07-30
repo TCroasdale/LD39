@@ -46,10 +46,12 @@ namespace LD39
             if (keyLeft && !keyRight){
                 moveHor = -1.0f;
                 if(!isAttacking) setSprite(ArtManager.Instance.getTexture("Player_left"));
+                if(!isGrounded) setSprite(ArtManager.Instance.getTexture("Player_jump_left"));
                 direction = 0;
             }else if (keyRight && !keyLeft) {
                 moveHor = 1.0f;
                 if (!isAttacking) setSprite(ArtManager.Instance.getTexture("Player_right"));
+                if (!isGrounded) setSprite(ArtManager.Instance.getTexture("Player_jump_right"));
                 direction = 2;
             }
             else{
@@ -75,7 +77,7 @@ namespace LD39
                 canMove = false;
                 Vector2 offset = Vector2.Zero;
                 if (direction == 0) { offset = new Vector2(12, 20); }
-                if (direction == 1) { offset = new Vector2(12, 8); }
+                if (direction == 1) { offset = new Vector2(16, 8); }
                 if (direction == 2) { offset = new Vector2(20, 20); }
 
                 FistActor fist = ActorManager.Instance.createActor<FistActor>("Fist", getPosition() + offset) as FistActor;
@@ -93,8 +95,10 @@ namespace LD39
                 playerBody.LinearVelocity = new Vector2(0, playerBody.LinearVelocity.Y);
             }
 
-            bool badPosition = (getPosition().X < 0 || getPosition().X > 800 ||getPosition().Y < 0);
-            if(currPower <= 0 || badPosition)
+            bool badPosition = getPosition().X < 0 || getPosition().X > 800;
+            float camHeight = -GameManager.Instance.getCamera().getHeight();
+            badPosition = badPosition || getPosition().Y > camHeight + 600;
+            if (currPower <= 0 || badPosition)
             {
                 GameOver();
             }
@@ -145,7 +149,8 @@ namespace LD39
                 {
                     if (info.other.tag == "Enemy")
                     {
-                        currPower -= hitPowerDecrease;
+                        if(!isAttacking)
+                            currPower -= hitPowerDecrease;
                     }
                 }
                 return false;
@@ -206,6 +211,7 @@ namespace LD39
             AudioManager.Instance.fireSfx("Death");
             UiManager.Instance.getUi("FailureMsg").isVisible = true;
             ActorManager.Instance.deleteActor(this);
+            GameManager.Instance.SetGameOver();
         }
 
         Body playerBody;
@@ -220,8 +226,8 @@ namespace LD39
         bool isGrounded;
 
 
-        float maxPower = 200.0f;
-        float currPower = 200.0f;
+        float maxPower = 300.0f;
+        float currPower = 300.0f;
         float walkPowerDecrease = 0.25f;
         float jumpPowerDecrease = 1f;
         float hitPowerDecrease = 5f;

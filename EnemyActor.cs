@@ -47,6 +47,7 @@ namespace LD39
                 }
                 isHit = true;
                 knockbackDir = getPosition() - info.other.getPosition();
+                canMove = true;
                 return true;
             }
             else if(info.other.tag == "Player")
@@ -74,19 +75,18 @@ namespace LD39
             Vector2 targPos = targ.getPosition();
             if (targPos.X < getPosition().X) setSprite(ArtManager.Instance.getTexture("DroneLeft"));
             if (targPos.X > getPosition().X) setSprite(ArtManager.Instance.getTexture("DroneRight"));
-
+            body.LinearVelocity = Vector2.Zero;
             if (!isHit)
             {
-                Vector2 diff = targPos - getPosition();
-                if (diff.Length() > 16)
+                if (canMove)
                 {
-                    diff.Normalize();
-                    diff *= moveSpeed;
-                    body.LinearVelocity = diff;
-                }
-                else
-                {
-                    body.LinearVelocity = Vector2.Zero;
+                    Vector2 diff = targPos - getPosition();
+                    if (diff.Length() > 16)
+                    {
+                        diff.Normalize();
+                        diff *= moveSpeed;
+                        body.LinearVelocity = diff;
+                    }
                 }
             }
             else
@@ -146,6 +146,6 @@ namespace LD39
         float dmgTimeout = 0.5f;
         float dmgTimer = 0.5f;
 
-        public bool canMove = false;
+        public bool canMove = true;
     }
 }

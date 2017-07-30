@@ -29,7 +29,8 @@ namespace LD39
 
         private LevelManager() {
             files = new List<string>();
-            files.Add("BaseLevel.oel");
+            files.Add("rand_0.oel");
+            files.Add("rand_1.oel");
         }
 
         public static LevelManager Instance
@@ -44,6 +45,12 @@ namespace LD39
             }
         }
         #endregion
+
+        public void reset()
+        {
+            tiles.Clear();
+            detailTiles.Clear();
+        }
 
         public void loadFile(string fileName)
         {
@@ -129,7 +136,7 @@ namespace LD39
         public void AddRandomLevel(int offset)
         {
             Random rand = new Random();
-            string fileName = files[rand.Next(files.Count - 1)];
+            string fileName = files[rand.Next(0, files.Count)];
             using (XmlReader reader = XmlReader.Create(levelLocation + fileName))
             {
                 Console.WriteLine("Reading file: " + fileName);
@@ -151,14 +158,9 @@ namespace LD39
                                     reader.Read();
                                 } while (reader.Name == "rect");
                                 break;
-                            case "PlayerStart":
+                            case "Battery":
                                 int xPos = int.Parse(reader.GetAttribute("x"));
                                 int yPos = int.Parse(reader.GetAttribute("y"));
-                                //ActorManager.Instance.createActor<PlayerActor>("Player", new Vector2(xPos, offset + yPos));
-                                break;
-                            case "Battery":
-                                xPos = int.Parse(reader.GetAttribute("x"));
-                                yPos = int.Parse(reader.GetAttribute("y"));
                                 Console.WriteLine("Adding Battery at: {0}, {1}", xPos, offset + yPos);
                                 ActorManager.Instance.createActor<PowerPlusActor>("Battery", new Vector2(xPos, yPos - offset));
                                 break;
@@ -169,6 +171,13 @@ namespace LD39
                                 CoinActor actor = ActorManager.Instance.createActor<CoinActor>("GoldCoin", new Vector2(xPos, yPos - offset)) as CoinActor;
                                 actor.amount = 250;
                                 actor.setSprite(ArtManager.Instance.getTexture("GoldCoin"));
+                                break;
+                            case "Enemy":
+                                xPos = int.Parse(reader.GetAttribute("x"));
+                                yPos = int.Parse(reader.GetAttribute("y"));
+                                Console.WriteLine("Adding enemy at: {0}, {1}", xPos, offset + yPos);
+                                EnemyActor enemy = ActorManager.Instance.createActor<EnemyActor>("Enemy", new Vector2(xPos, yPos - offset)) as EnemyActor;
+                                enemy.setActor(ActorManager.Instance.getFirstWithTag("Player"));
                                 break;
                             case "Coin_Silver":
                                 xPos = int.Parse(reader.GetAttribute("x"));

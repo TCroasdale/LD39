@@ -50,6 +50,12 @@ namespace LD39
         }
         #endregion
 
+        public void reset()
+        {
+            world.Clear();
+            fixtureActorMapping.Clear();
+            staticColliders.Clear();
+        }
 
         public void initialise()
         {
