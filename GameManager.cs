@@ -120,6 +120,8 @@ namespace LD39
 
             UiElement ScoreUI = UiManager.Instance.getUi("Score UI");
             UiElement barFG = UiManager.Instance.getUi("BarFG");
+            barFG.setSize(new Vector2(121, 16));
+            barFG.setContent("<IMG>PowerBarFG");
             PlayerActor playerActor = ActorManager.Instance.getFirstWithTag("Player") as PlayerActor;
             playerActor.setBarFGUi(barFG);
             playerActor.setScoreUi(ScoreUI);
@@ -135,7 +137,6 @@ namespace LD39
             UiManager.Instance.getUi("leftCtrl").isVisible = true;
             UiManager.Instance.getUi("rightCtrl").isVisible = true;
 
-            /*----- TEMP -----*/
             EnemyActor enemy = ActorManager.Instance.createActor<EnemyActor>("enemy", new Vector2(400, 10)) as EnemyActor;
             enemy.setActor(playerActor);
 
