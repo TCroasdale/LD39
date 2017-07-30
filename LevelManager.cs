@@ -31,6 +31,14 @@ namespace LD39
             files = new List<string>();
             files.Add("rand_0.oel");
             files.Add("rand_1.oel");
+            files.Add("rand_2.oel");
+            files.Add("rand_3.oel");
+            files.Add("rand_4.oel");
+            files.Add("rand_5.oel");
+            files.Add("rand_6.oel");
+            files.Add("rand_7.oel");
+            files.Add("rand_8.oel");
+            files.Add("rand_9.oel");
         }
 
         public static LevelManager Instance

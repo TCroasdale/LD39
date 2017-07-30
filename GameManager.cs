@@ -128,6 +128,10 @@ namespace LD39
 
             hasFailed = false;
 
+            stage = 1;
+            canProgress = false;
+            isProgressing = false;
+
         }
 
         public Camera getCamera() { return cam; }

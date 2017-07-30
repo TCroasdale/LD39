@@ -39,20 +39,42 @@ namespace LD39
             backgroundMusic = song;
         }
 
+        public void update(float deltaTime){
+            if (!canFire)
+            {
+                timer -= deltaTime;
+                if (timer <= 0)
+                {
+                    canFire = true;
+                }
+            }
+        }
+
         public void addSfx(string name, SoundEffect effect)
         {
             sfx.Add(name, effect);
         }
 
         public void fireSfx(string name){
-            sfx[name].Play();
+            if (canFire)
+            {
+                sfx[name].Play();
+                canFire = false;
+                timer = audioTimeout;
+            }
         }
 
         public void playMusic(){
+            if (MediaPlayer.State == MediaState.Playing)
+                MediaPlayer.Stop();
             MediaPlayer.Play(backgroundMusic);
             MediaPlayer.IsRepeating = true;
-            MediaPlayer.Volume = 0.8f;
+            MediaPlayer.Volume = 1.0f;
         }
+
+        private float audioTimeout = 0.1f;
+        private float timer;
+        private bool canFire = true;
 
     }
 }

@@ -45,17 +45,21 @@ namespace LD39
 
             if (keyLeft && !keyRight){
                 moveHor = -1.0f;
-                if(!isAttacking) setSprite(ArtManager.Instance.getTexture("Player_left"));
-                if(!isGrounded) setSprite(ArtManager.Instance.getTexture("Player_jump_left"));
                 direction = 0;
-            }else if (keyRight && !keyLeft) {
+                if (!isGrounded) setSprite(ArtManager.Instance.getTexture("Player_jump_left"));
+                else if (isAttacking) setSprite(ArtManager.Instance.getTexture("Player_punch_left"));
+                else Animate(direction, deltaTime);
+            }
+            else if (keyRight && !keyLeft) {
                 moveHor = 1.0f;
-                if (!isAttacking) setSprite(ArtManager.Instance.getTexture("Player_right"));
-                if (!isGrounded) setSprite(ArtManager.Instance.getTexture("Player_jump_right"));
                 direction = 2;
+                if (!isGrounded) setSprite(ArtManager.Instance.getTexture("Player_jump_right"));
+                else if (isAttacking) setSprite(ArtManager.Instance.getTexture("Player_punch_right"));
+                else Animate(direction, deltaTime);
             }
             else{
-                if (!isAttacking) setSprite(ArtManager.Instance.getTexture("Player"));
+                if(!isGrounded) setSprite(ArtManager.Instance.getTexture("Player_jump"));
+                else if (!isAttacking) setSprite(ArtManager.Instance.getTexture("Player"));
                 direction = 1;
             }
 
@@ -64,6 +68,7 @@ namespace LD39
             {
                 playerBody.ApplyForce(new Vector2(0, jumpForce));
                 currPower -= jumpPowerDecrease;
+                AudioManager.Instance.fireSfx("Jump");
             }
 
             if (!isGrounded)
@@ -76,9 +81,9 @@ namespace LD39
                 isAttacking = true;
                 canMove = false;
                 Vector2 offset = Vector2.Zero;
-                if (direction == 0) { offset = new Vector2(12, 20); }
+                if (direction == 0) { offset = new Vector2(12, 22); }
                 if (direction == 1) { offset = new Vector2(16, 8); }
-                if (direction == 2) { offset = new Vector2(20, 20); }
+                if (direction == 2) { offset = new Vector2(24, 22); }
 
                 FistActor fist = ActorManager.Instance.createActor<FistActor>("Fist", getPosition() + offset) as FistActor;
                 fist.setUp(direction, this);
@@ -135,7 +140,8 @@ namespace LD39
             {
                 if (info.other.tag == "Battery")
                 {
-                    currPower = maxPower;
+                    currPower += batteryGrabIncrease;
+                    if (currPower > maxPower) currPower = maxPower;
                     ActorManager.Instance.deleteActor(info.other);
                     AudioManager.Instance.fireSfx("Battery");
                 }
@@ -149,8 +155,11 @@ namespace LD39
                 {
                     if (info.other.tag == "Enemy")
                     {
-                        if(!isAttacking)
+                        if (!isAttacking)
+                        {
+                            AudioManager.Instance.fireSfx("Hit");
                             currPower -= hitPowerDecrease;
+                        }
                     }
                 }
                 return false;
@@ -210,8 +219,30 @@ namespace LD39
         {
             AudioManager.Instance.fireSfx("Death");
             UiManager.Instance.getUi("FailureMsg").isVisible = true;
+            UiManager.Instance.getUi("ClearMsg").isVisible = false;
             ActorManager.Instance.deleteActor(this);
             GameManager.Instance.SetGameOver();
+        }
+
+        public void Animate(int direction, float time){
+            currentTimer += time;
+            if(currentTimer >= 1.0 / fps){
+                currentAnimFrame += animDirection;
+                currentTimer = 0.0f;
+                if(currentAnimFrame == maxAnimFrame || currentAnimFrame == minAnimFrame){
+                    animDirection = -animDirection;
+                }
+            }
+
+
+            if(direction == 2)
+            {
+                setSprite(ArtManager.Instance.getTexture(runRightAnim[currentAnimFrame]));
+            }
+            else if(direction == 0)
+            {
+                setSprite(ArtManager.Instance.getTexture(runLeftAnim[currentAnimFrame]));
+            }
         }
 
         Body playerBody;
@@ -226,11 +257,12 @@ namespace LD39
         bool isGrounded;
 
 
-        float maxPower = 300.0f;
-        float currPower = 300.0f;
+        float maxPower = 250.0f;
+        float currPower = 250.0f;
         float walkPowerDecrease = 0.25f;
         float jumpPowerDecrease = 1f;
         float hitPowerDecrease = 5f;
+        float batteryGrabIncrease = 125.0f;
 
         int score = 0;
 
@@ -242,5 +274,14 @@ namespace LD39
         UiElement barFG;
         float initBarWidth;
         float initLeftPos;
+
+        int currentAnimFrame = 0;
+        int maxAnimFrame = 2;
+        int minAnimFrame = 0;
+        int animDirection = 1;
+        float fps = 2f;
+        float currentTimer = 0.0f;
+        string[] runRightAnim = { "Player_right_-1", "Player_right_0", "Player_right_1" };
+        string[] runLeftAnim = { "Player_left_-1", "Player_left_0", "Player_left_1" };
     }
 }

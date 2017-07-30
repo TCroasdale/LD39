@@ -84,6 +84,10 @@ namespace LD39
             {
                 setSprite(ArtManager.Instance.getTexture("Player_Fist_Vert"));
             }
+            if(Direction == 2)
+            {
+                setSprite(ArtManager.Instance.getTexture("Player_Fist_right"));
+            }
             owner = a;
         }
 

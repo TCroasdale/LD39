@@ -47,13 +47,6 @@ namespace LD39
 
             newActor.setPosition(position);
             newActor.initialise();
-            /*while(actors.ContainsKey(name)){
-                name += "_";
-            }
-            while (actorsToAdd.ContainsKey(name))
-            {
-                name += "_";
-            }*/
             actorsToAdd.Add(newActor);
             newActor.id = currID;
             currID++;

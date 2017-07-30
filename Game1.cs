@@ -23,7 +23,7 @@ namespace LD39
             graphics.PreferredBackBufferWidth = 800;
             graphics.SynchronizeWithVerticalRetrace = true;
             graphics.ApplyChanges();
-            this.Window.Title = "Robo Climb?";
+            this.Window.Title = "Robo Climb";
             Content.RootDirectory = "Content";
         }
 
@@ -67,11 +67,24 @@ namespace LD39
             ArtManager.Instance.addTexture("Player_left", Content.Load<Texture2D>("Robo_left"));
             ArtManager.Instance.addTexture("Player_jump_right", Content.Load<Texture2D>("Robo_jump_right"));
             ArtManager.Instance.addTexture("Player_jump_left", Content.Load<Texture2D>("Robo_jump_left"));
+            ArtManager.Instance.addTexture("Player_punch_right", Content.Load<Texture2D>("Robo_punch_right"));
+            ArtManager.Instance.addTexture("Player_punch_left", Content.Load<Texture2D>("Robo_punch_left"));
+            ArtManager.Instance.addTexture("Player_jump", Content.Load<Texture2D>("Robo_jump"));
+            ArtManager.Instance.addTexture("Player_right_0", Content.Load<Texture2D>("Robo_right_0"));
+            ArtManager.Instance.addTexture("Player_right_1", Content.Load<Texture2D>("Robo_run_right_1"));
+            ArtManager.Instance.addTexture("Player_right_-1", Content.Load<Texture2D>("Robo_right_-1"));
+            ArtManager.Instance.addTexture("Player_left_0", Content.Load<Texture2D>("Robo_left_0"));
+            ArtManager.Instance.addTexture("Player_left_1", Content.Load<Texture2D>("Robo_left_1"));
+            ArtManager.Instance.addTexture("Player_left_-1", Content.Load<Texture2D>("Robo_left_-1"));
+
             ArtManager.Instance.addTexture("Player_Fist", Content.Load<Texture2D>("RoboFist"));
+            ArtManager.Instance.addTexture("Player_Fist_right", Content.Load<Texture2D>("RoboFist_right"));
             ArtManager.Instance.addTexture("Player_Arm", Content.Load<Texture2D>("RoboArm"));
             ArtManager.Instance.addTexture("Player_Fist_Vert", Content.Load<Texture2D>("RoboFist_Vert"));
             ArtManager.Instance.addTexture("Player_Arm_Vert", Content.Load<Texture2D>("RoboArm_Vert"));
+
             ArtManager.Instance.addTexture("Tiles", Content.Load<Texture2D>("Tiles"));
+
             ArtManager.Instance.addTexture("Battery", Content.Load<Texture2D>("Battery"));
             ArtManager.Instance.addTexture("SilverCoin", Content.Load<Texture2D>("SilverCoin"));
             ArtManager.Instance.addTexture("GoldCoin", Content.Load<Texture2D>("GoldCoin"));
@@ -117,6 +130,7 @@ namespace LD39
             ActorManager.Instance.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
             cam.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
             GameManager.Instance.Update();
+            AudioManager.Instance.update((float)gameTime.ElapsedGameTime.TotalSeconds);
 
             base.Update(gameTime);
         }
@@ -162,8 +176,8 @@ namespace LD39
             UiElement goUI = UiManager.Instance.addUi("FailureMsg", new Vector2(0, 128), new Vector2(800, 128), "<IMG>Failure_Ui");
             goUI.isVisible = false;
 
-            UiElement barBG = UiManager.Instance.addUi("BarBG", new Vector2(672, 0), new Vector2(128, 16), "<IMG>PowerBarBG");
-            UiElement barFG = UiManager.Instance.addUi("BarFG", new Vector2(672+5, 0+4), new Vector2(121, 8), "<IMG>PowerBarFG");
+            UiElement barBG = UiManager.Instance.addUi("BarBG", new Vector2(656, 0), new Vector2(144, 24), "<IMG>PowerBarBG");
+            UiElement barFG = UiManager.Instance.addUi("BarFG", new Vector2(656+21, 0+4), new Vector2(121, 16), "<IMG>PowerBarFG");
             playerActor.setBarFGUi(barFG);
         }
 

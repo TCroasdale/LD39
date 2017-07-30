@@ -42,7 +42,7 @@ namespace LD39
         public void setHeight(float height)
         {
             TargetHeight = height;
-            Position.Y = height;
+            Position.Y = TargetHeight;
             isMoving = false;
         }
 
