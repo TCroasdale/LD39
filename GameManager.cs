@@ -74,7 +74,7 @@ namespace LD39
                     progressTimer -= deltaTime;
                     if (Keyboard.GetState().IsKeyDown(Keys.Space) || progressTimer < 0)
                     {
-                        progressTimer = 7.5f;
+                        progressTimer = 5f;
                         canProgress = false;
                         UiManager.Instance.getUi("ClearMsg").isVisible = false;
                         progressGame();
@@ -150,7 +150,7 @@ namespace LD39
 
         public Camera getCamera() { return cam; }
 
-        float progressTimer = 7.5f;
+        float progressTimer = 5f;
 
     }
 }

@@ -31,7 +31,6 @@ namespace LD39
             playerBody.Mass = mass;
             PhysicsManager.Instance.registerFixture(fixture, this);
 
-            jumpForce = -55000.0f;// calculateJumpForce();
             tag = "Player";
         }
 
@@ -255,17 +254,17 @@ namespace LD39
         CircleShape circleshape;
         Fixture fixture;
 
-        float moveSpeed = 64.0f;
+        float moveSpeed = 80.0f;
         float inAirMoveSpeedModifier = 0.75f;
-        float jumpForce;
-        float mass = 5.0f;
+        float jumpForce = -55000.0f;
+        float mass = 4.0f;
 
         bool isGrounded;
 
 
         float maxPower = 250.0f;
         float currPower = 250.0f;
-        float walkPowerDecrease = 0.25f;
+        float walkPowerDecrease = 0.3f;
         float jumpPowerDecrease = 1f;
         float hitPowerDecrease = 5f;
         float batteryGrabIncrease = 125.0f;
@@ -285,7 +284,7 @@ namespace LD39
         int maxAnimFrame = 2;
         int minAnimFrame = 0;
         int animDirection = 1;
-        float fps = 2f;
+        float fps = 3f;
         float currentTimer = 0.0f;
         string[] runRightAnim = { "Player_right_-1", "Player_right_0", "Player_right_1" };
         string[] runLeftAnim = { "Player_left_-1", "Player_left_0", "Player_left_1" };

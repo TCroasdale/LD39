@@ -59,8 +59,8 @@ namespace LD39
 
         public void initialise()
         {
-            world = new World(new Vector2(0f, 98f));
             ConvertUnits.SetDisplayUnitToSimUnitRatio(16f);
+            world = new World(new Vector2(0f, 98f));
             staticColliders = new List<Body>();
             fixtureActorMapping = new Dictionary<Fixture, Actor>();
         }
